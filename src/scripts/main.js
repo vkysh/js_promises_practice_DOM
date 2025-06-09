@@ -33,22 +33,29 @@ const thirdPromise = new Promise((resolve) => {
   let leftClicked = false;
   let rightClicked = false;
 
-  const onMouseDown = (e) => {
-    if (e.button === 0) {
-      leftClicked = true;
-    }
-
-    if (e.button === 2) {
-      rightClicked = true;
-    }
-
+  const checkResolve = () => {
     if (leftClicked && rightClicked) {
       resolve('Third promise was resolved');
-      document.removeEventListener('mousedown', onMouseDown);
+      document.removeEventListener('click', onClick);
+      document.removeEventListener('contextmenu', onRightClick);
     }
   };
 
-  document.addEventListener('mousedown', onMouseDown);
+  const onClick = (e) => {
+    if (e.button === 0) {
+      leftClicked = true;
+      checkResolve();
+    }
+  };
+
+  const onRightClick = (e) => {
+    e.preventDefault();
+    rightClicked = true;
+    checkResolve();
+  };
+
+  document.addEventListener('click', onClick);
+  document.addEventListener('contextmenu', onRightClick);
 });
 
 function showSuccess(message) {
